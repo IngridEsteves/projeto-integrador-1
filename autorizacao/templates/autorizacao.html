@@ -203,8 +203,9 @@
         <div id="atualizar-autorizacao" class="ocultar">
             <p></p>
             <select id="autorizacao-select" onchange="dados_autorizacao()" class="form-control">
+                <option value=""></option>
                 {% for autorizacao in autorizacoes %}
-                <option value="{{autorizacao.id}}">{{autorizacao.numero}}</option>
+                    <option value="{{autorizacao.id}}">{{autorizacao.numero}}</option>
                 {% endfor %}
             </select>
             <br>

@@ -101,5 +101,4 @@ def att_autorizacao(request):
     id_autorizacao = request.POST.get('id_autorizacao')
     autorizacao = Autorizacao.objects.filter(id=id_autorizacao)
     autorizacao_json = json.loads(serializers.serialize('json', autorizacao))[0]['fields']
-    print(autorizacao_json)
     return JsonResponse(autorizacao_json)
