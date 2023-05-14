@@ -1,12 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Autorizacao
+from django.core import serializers
+import json
 
 
 # Create your views here.
 def autorizacao(request):
     if request.method == "GET":
-        return render(request, 'autorizacao.html')
+        autorizacoes_list = Autorizacao.objects.all()
+        return render(request, 'autorizacao.html', {'autorizacoes': autorizacoes_list})
     elif request.method == "POST":
         categoria = request.POST.get('categoria')
         tipo = request.POST.get('tipo')
@@ -92,3 +95,11 @@ def autorizacao(request):
         autorizacao.save()
 
         return HttpResponse('tessteee-bancoo')
+
+
+def att_autorizacao(request):
+    id_autorizacao = request.POST.get('id_autorizacao')
+    autorizacao = Autorizacao.objects.filter(id=id_autorizacao)
+    autorizacao_json = json.loads(serializers.serialize('json', autorizacao))[0]['fields']
+    print(autorizacao_json)
+    return JsonResponse(autorizacao_json)
