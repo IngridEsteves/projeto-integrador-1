@@ -37,17 +37,7 @@ class Autorizacao(models.Model):
     app1 = models.CharField(max_length=50)
     app2 = models.CharField(max_length=50)
     reserva = models.CharField(max_length=50)
-    MOT1 = "Preservação no interior do lote/Outros"
-    MOT2 = "Preservação no interior do lote/Motivo 1"
-    MOT3 = "Preservação no interior do lote/Motivo 2"
-    MOT4 = "Preservação no interior do lote/Motivo 3"
-    restricao_CHOICES = (
-        (MOT1, "Preservação no interior do lote/Outros"),
-        (MOT2, "Preservação no interior do lote/Motivo 1"),
-        (MOT3, "Preservação no interior do lote/Motivo 2"),
-        (MOT4, "Preservação no interior do lote/Motivo 3")
-    )
-    restricao = models.CharField(max_length=50, choices=restricao_CHOICES)
+    restricao = models.CharField(max_length=100)
     area_rest = models.IntegerField(default=0)
 
     def __str__(self) -> str:
