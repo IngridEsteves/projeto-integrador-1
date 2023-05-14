@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from .models import Autorizacao
 from django.core import serializers
 import json
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
@@ -89,7 +90,7 @@ def autorizacao(request):
             app2=app2,
             reserva=reserva,
             restricao=restricao,
-            area_rest=area_rest
+            area_rest=area_rest,
         )
 
         autorizacao.save()
@@ -101,4 +102,90 @@ def att_autorizacao(request):
     id_autorizacao = request.POST.get('id_autorizacao')
     autorizacao = Autorizacao.objects.filter(id=id_autorizacao)
     autorizacao_json = json.loads(serializers.serialize('json', autorizacao))[0]['fields']
-    return JsonResponse(autorizacao_json)
+    autorizacao_id = json.loads(serializers.serialize('json', autorizacao))[0]['pk']
+    data = {'autorizacao': autorizacao_json, 'autorizacao_id': autorizacao_id}
+    return JsonResponse(data)
+
+
+def update_autorizacao(request, id):
+    body = json.loads(request.body)
+
+    categoria = body['categoria']
+    tipo = body['tipo']
+    numero = body['numero']
+    emissao = body['emissao']
+    validade = body['validade']
+    proc_ADM = body['proc_ADM']
+    tcaNum = body['tcaNum']
+    compromitente = body['compromitente']
+    cpfcnpj = body['cpfcnpj']
+    insc_CAD = body['insc_CAD']
+    endereco = body['endereco']
+    quadra = body['quadra']
+    lote = body['lote']
+    bairro = body['bairro']
+    area_lote = body['area_lote']
+    sup_aut = body['sup_aut']
+    matricula = body['matricula']
+    anuencia_CETESB = body['anuencia_CETESB']
+    anuencia_CONDEMA = body['anuencia_CONDEMA']
+    compensacao_averbacao = body['compensacao_averbacao']
+    observacao = body['observacao']
+    objetivo = body['objetivo']
+    local = body['local']
+    nativos = body['nativos']
+    exoticos = body['exoticos']
+    euterpe = body['euterpe']
+    transplante = body['transplante']
+    vegetacao = body['vegetacao']
+    estagio = body['estagio']
+    area_aut = body['area_aut']
+    recup_PRAD = body['recup_PRAD']
+    app1 = body['app1']
+    app2 = body['app2']
+    reserva = body['reserva']
+    restricao = body['restricao']
+    area_rest = body['area_rest']
+
+    autorizacao = get_object_or_404(Autorizacao, id=id)
+    try:
+        autorizacao.categoria = categoria
+        autorizacao.tipo = tipo
+        autorizacao.numero = numero
+        autorizacao.emissao = emissao
+        autorizacao.validade = validade
+        autorizacao.proc_ADM = proc_ADM
+        autorizacao.tcaNum = tcaNum
+        autorizacao.compromitente = compromitente
+        autorizacao.cpfcnpj = cpfcnpj
+        autorizacao.insc_CAD = insc_CAD
+        autorizacao.endereco = endereco
+        autorizacao.quadra = quadra
+        autorizacao.lote = lote
+        autorizacao.bairro = bairro
+        autorizacao.area_lote = area_lote
+        autorizacao.sup_aut = sup_aut
+        autorizacao.matricula = matricula
+        autorizacao.anuencia_CETESB = anuencia_CETESB
+        autorizacao.anuencia_CONDEMA = anuencia_CONDEMA
+        autorizacao.compensacao_averbacao = compensacao_averbacao
+        autorizacao.observacao = observacao
+        autorizacao.objetivo = objetivo
+        autorizacao.local = local
+        autorizacao.nativos = nativos
+        autorizacao.exoticos = exoticos
+        autorizacao.euterpe = euterpe
+        autorizacao.transplante = transplante
+        autorizacao.vegetacao = vegetacao
+        autorizacao.estagio = estagio
+        autorizacao.area_aut = area_aut
+        autorizacao.recup_PRAD = recup_PRAD
+        autorizacao.app1 = app1
+        autorizacao.app2 = app2
+        autorizacao.reserva = reserva
+        autorizacao.restricao = restricao
+        autorizacao.area_rest = area_rest
+        autorizacao.save()
+        return JsonResponse({'status': '200', 'numero': numero})
+    except KeyError:
+        return JsonResponse({'status': '500'})
