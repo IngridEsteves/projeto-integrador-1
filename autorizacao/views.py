@@ -45,6 +45,11 @@ def autorizacao(request):
         restricao = request.POST.get('restricao')
         area_rest = request.POST.get('area_rest')
 
+        autorizacao = Autorizacao.objects.filter(numero=numero)
+
+        if autorizacao.exists():
+            return HttpResponse('Autorização já existe')
+
         autorizacao = Autorizacao(
             categoria=categoria,
             tipo=tipo,
