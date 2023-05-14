@@ -233,8 +233,11 @@ function update_autorizacao(){
     }).then(function(data){
         if(data['status'] == '200'){
             console.log('Dados alterados com sucesso')
+            msg = "Dados alterados com sucesso";
         }else{
             console.log('Ocorreu algum erro')
+            msg = "Ocorreu algum erro";
         }
+        alert(msg)
     })
 }
