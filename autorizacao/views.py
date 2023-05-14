@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import Autorizacao
 
 
 # Create your views here.
@@ -43,6 +44,46 @@ def autorizacao(request):
         reserva = request.POST.get('reserva')
         restricao = request.POST.get('restricao')
         area_rest = request.POST.get('area_rest')
-        
-        return HttpResponse('tessteee')
 
+        autorizacao = Autorizacao(
+            categoria=categoria,
+            tipo=tipo,
+            numero=numero,
+            emissao=emissao,
+            validade=validade,
+            proc_ADM=proc_ADM,
+            tcaNum=tcaNum,
+            compromitente=compromitente,
+            cpfcnpj=cpfcnpj,
+            insc_CAD=insc_CAD,
+            endereco=endereco,
+            quadra=quadra,
+            lote=lote,
+            bairro=bairro,
+            area_lote=area_lote,
+            sup_aut=sup_aut,
+            matricula=matricula,
+            anuencia_CETESB=anuencia_CETESB,
+            anuencia_CONDEMA=anuencia_CONDEMA,
+            compensacao_averbacao=compensacao_averbacao,
+            observacao=observacao,
+            objetivo=objetivo,
+            local=local,
+            nativos=nativos,
+            exoticos=exoticos,
+            euterpe=euterpe,
+            transplante=transplante,
+            vegetacao=vegetacao,
+            estagio=estagio,
+            area_aut=area_aut,
+            recup_PRAD=recup_PRAD,
+            app1=app1,
+            app2=app2,
+            reserva=reserva,
+            restricao=restricao,
+            area_rest=area_rest
+        )
+
+        autorizacao.save()
+
+        return HttpResponse('tessteee-bancoo')
