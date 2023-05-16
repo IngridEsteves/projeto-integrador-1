@@ -17,7 +17,7 @@ class Relatorio(models.Model):
     titulo = models.CharField(max_length=50)
     categoria_relatorio = models.ManyToManyField(CategoriaRelatorio)
     data_geracao = models.DateField(null=True)
-    protocolo = models.CharField(max_length=32, null=True, blank=True)
+    protocolo = models.CharField(max_length=52, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.titulo
@@ -26,3 +26,9 @@ class Relatorio(models.Model):
         if not self.protocolo:
             self.protocolo = datetime.now().strftime("%d/%m/%Y-%H:%M:%S-") + token_hex(16)
         super(Relatorio, self).save(*args, **kwargs)
+
+    def valor_total(self):
+        valor_total = float(0)
+        for categoria in self.categoria_relatorio.all():
+            valor_total += float(categoria.valor)
+        return valor_total
