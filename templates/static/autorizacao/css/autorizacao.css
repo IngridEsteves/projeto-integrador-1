@@ -16,6 +16,20 @@
 
 }
 
+.button-card{
+
+    background-color: var(--main-color);
+    width: 50%;
+    margin-left: 10px;
+    margin-top: 10px;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 25px;
+    border: none;
+    color: white;
+
+}
 .btn-add-carros{
 
     background-color: var(--contrast-color);
@@ -41,6 +55,13 @@
     display: none;
   }
 
-  #form-att-autorizacao{
+#form-att-autorizacao{
     display: none;
+  }
+
+.link {
+    text-decoration-color: white;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
   }

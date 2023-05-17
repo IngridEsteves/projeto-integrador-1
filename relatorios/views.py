@@ -61,3 +61,7 @@ def baixar_os(request, identificador):
     pdf_bytes = BytesIO(pdf_content)
 
     return FileResponse(pdf_bytes, as_attachment=True, filename=f"os_{relatorio.titulo}.pdf")
+
+
+def relatorio_inicio(request):
+    return render(request, 'relatorio_inicio.html')
