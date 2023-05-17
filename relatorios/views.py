@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .forms import FormRelatorio
 from django.http import HttpResponse
+from .models import Relatorio
 
 
 # Create your views here.
@@ -20,4 +21,10 @@ def novo_relatorio(request):
 
 def listar_relatorio(request):
     if request.method == "GET":
-        return render(request, 'listar_relatorio.html')
+        relatorios = Relatorio.objects.all()
+        return render(request, 'listar_relatorio.html', {'relatorios': relatorios})
+
+
+def relatorio(request, identificador):
+    relatorio = get_object_or_404(Relatorio, identificador=identificador)
+    return render(request, 'relatorio.html', {'relatorio': relatorio})
