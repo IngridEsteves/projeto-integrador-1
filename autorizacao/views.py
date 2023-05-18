@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 from .models import Autorizacao
 from django.core import serializers
 import json
 from django.shortcuts import get_object_or_404
+from fpdf import FPDF
+from io import BytesIO
 
 
 # Create your views here.
@@ -203,6 +205,140 @@ def autorizacao_list(request, id):
 
 
 def baixar(request, id):
-    relatorio = get_object_or_404(Autorizacao, id=id)
+    autorizacao = get_object_or_404(Autorizacao, id=id)
 
-    return HttpResponse('TESTEEEE')
+    class PDF(FPDF):
+        def header(self):
+            # Rendering logo:
+            self.image("templates/static/relatorios/imagens/cabecalho.png", 10, 8, 180)
+            # Setting font: helvetica bold 15
+            self.set_font("Arial", "B", 15)
+            # Moving cursor to the right:
+            self.cell(80)
+            # Performing a line break:
+            self.ln(30)
+
+        def footer(self):
+            # Position cursor at 1.5 cm from bottom:
+            self.set_y(-15)
+            # Setting font: helvetica italic 8
+            self.set_font("Arial", "I", 8)
+            # Printing page number:
+            self.cell(0, 10, f"Page {self.page_no()}", align="C")
+
+    pdf = PDF()
+    pdf.add_page()
+
+    pdf.set_font('Arial', 'B', 12)
+
+    pdf.set_fill_color(240, 240, 240)
+
+    pdf.cell(80, 10, 'AUTORIZACAO AMBIENTAL', 0, 0, 'C')  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(30, 10, 'Categoria', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, 'Tipo', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, 'Número', 0, 1, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+
+    pdf.cell(80, 10, '', 0, 0)
+    pdf.cell(30, 10, f'{autorizacao.categoria}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, f'{autorizacao.tipo}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, f'{autorizacao.numero}', 1, 1, 'L', 0)
+    pdf.ln(5)
+
+    pdf.cell(30, 10, 'Emissão', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, 'Validade', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(70, 10, 'Processo Administrativo', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, 'TCA nº', 0, 1, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+
+    pdf.cell(30, 10, f'{autorizacao.emissao}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, f'{autorizacao.validade}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(70, 10, f'{autorizacao.proc_ADM}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, f'{autorizacao.tcaNum}', 1, 1, 'L', 0)
+    pdf.ln(5)
+
+    pdf.cell(100, 10, 'Compromitente', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, 'CPF / CNPJ', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(40, 10, 'Inscrição Cadastral', 0, 1, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+
+    pdf.cell(100, 10, f'{autorizacao.compromitente}', 1, 0, 'L', 10)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(30, 10, f'{autorizacao.cpfcnpj}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(40, 10, f'{autorizacao.insc_CAD}', 1, 1, 'L', 0)
+    pdf.ln(5)
+
+    pdf.cell(100, 10, 'Endereço do Imóvel', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(15, 10, 'Quadra', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(15, 10, 'Lote', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(40, 10, 'Bairro', 0, 1, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+
+    pdf.cell(100, 10, f'{autorizacao.endereco}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(15, 10, f'{autorizacao.quadra}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(15, 10, f'{autorizacao.lote}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(40, 10, f'{autorizacao.bairro}', 1, 1, 'L', 0)
+    pdf.ln(5)
+
+    pdf.cell(30, 10, 'Área do Lote', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(45, 10, 'Supressão Autorizada', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(90, 10, 'Matrícula do Imóvel - CRI', 0, 1, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+
+    pdf.cell(30, 10, f'{autorizacao.area_lote}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(45, 10, f'{autorizacao.sup_aut}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(90, 10, f'{autorizacao.matricula}', 1, 1, 'L', 0)
+    pdf.ln(5)
+
+    pdf.cell(40, 10, 'Anuência CETESB', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(45, 10, 'Anuência CONDEMA', 0, 0, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(90, 10, 'Compensação / Averbação', 0, 1, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+
+    pdf.cell(40, 10, f'{autorizacao.anuencia_CETESB}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(45, 10, f'{autorizacao.anuencia_CONDEMA}', 1, 0, 'L', 0)
+    pdf.cell(5, 10, '', 0, 0)
+    pdf.cell(90, 10, f'{autorizacao.compensacao_averbacao}', 1, 1, 'L', 0)
+    pdf.ln(5)
+
+    pdf.cell(30, 10, 'Observações', 0, 0, 'L', 1)
+    pdf.cell(150, 10, f'{autorizacao.observacao}', 1, 1, 'L', 0)
+    pdf.ln(5)
+
+    pdf.cell(190, 10, 'Árvores Isoladas', 0, 1, 'L', 1)  # altura, largura, nome, borda, passar para a próxima linha, alinhamento, cor de fundo  # noqa: E501
+
+    pdf.cell(50, 10, 'Objetivo', 0, 0)
+    pdf.cell(50, 10, 'Local', 0, 0)
+    pdf.cell(90, 10, 'Quantidade autorizada', 0, 1)
+
+    pdf.cell(45, 10, f'{autorizacao.objetivo}', 1, 0, 'L', 0)
+    pdf.cell(45, 10, f'{autorizacao.local}', 1, 0, 'L', 0)
+    pdf.cell(33, 10, f'{autorizacao.nativos} nativos', 1, 0, 'L', 0)
+    pdf.cell(33, 10, f'{autorizacao.exoticos} exoticos', 1, 0, 'L', 0)
+    pdf.cell(33, 10, f'{autorizacao.euterpe} euterpe edulis', 1, 1, 'L', 0)
+    pdf.ln(5)
+
+    pdf_content = pdf.output(dest='S').encode('latin1')  # Salvar o pdf em memória
+    pdf_bytes = BytesIO(pdf_content)
+
+    return FileResponse(pdf_bytes, as_attachment=True, filename=f"os_{autorizacao.id}.pdf")

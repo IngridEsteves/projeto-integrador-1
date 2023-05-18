@@ -35,7 +35,26 @@ def relatorio(request, identificador):
 def baixar_os(request, identificador):
     relatorio = get_object_or_404(Relatorio, identificador=identificador)
 
-    pdf = FPDF()
+    class PDF(FPDF):
+        def header(self):
+            # Rendering logo:
+            self.image("templates/static/relatorios/imagens/cabecalho.png", 10, 8, 180)
+            # Setting font: helvetica bold 15
+            self.set_font("Arial", "B", 15)
+            # Moving cursor to the right:
+            self.cell(80)
+            # Performing a line break:
+            self.ln(30)
+
+        def footer(self):
+            # Position cursor at 1.5 cm from bottom:
+            self.set_y(-15)
+            # Setting font: helvetica italic 8
+            self.set_font("Arial", "I", 8)
+            # Printing page number:
+            self.cell(0, 10, f"Page {self.page_no()}", align="C")
+
+    pdf = PDF()
     pdf.add_page()
 
     pdf.set_font('Arial', 'B', 12)
