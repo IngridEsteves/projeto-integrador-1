@@ -189,3 +189,20 @@ def update_autorizacao(request, id):
         return JsonResponse({'status': '200', 'numero': numero})
     except KeyError:
         return JsonResponse({'status': '500'})
+
+
+def listar_autorizacao(request):
+    if request.method == "GET":
+        autorizacoes = Autorizacao.objects.all()
+        return render(request, 'listar_autorizacao.html', {'autorizacoes': autorizacoes})
+
+
+def autorizacao_list(request, id):
+    autorizacao = get_object_or_404(Autorizacao, id=id)
+    return render(request, 'autorizacao_list.html', {'autorizacao': autorizacao})
+
+
+def baixar_os(request, id):
+    relatorio = get_object_or_404(Autorizacao, id=id)
+
+    return HttpResponse('TESTEEEE')

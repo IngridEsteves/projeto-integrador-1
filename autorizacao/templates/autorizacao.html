@@ -18,6 +18,11 @@
                 <p class="text-card">Atualizar Autorização</p>
             </div>
         </div>
+        <div class="row">
+            <a class="col-md card-dashboard" href="{% url 'listar_autorizacao' %}">
+                <button class="button-card">Listar Autorizações</button>
+            </a>
+        </div>
         <br>
         <div id="adicionar-autorizacao" class="adicionar-autorizacao ocultar">
             <form action="{% url 'autorizacao' %}" method="POST">{% csrf_token %}
