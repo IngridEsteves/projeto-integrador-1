@@ -202,7 +202,7 @@ def autorizacao_list(request, id):
     return render(request, 'autorizacao_list.html', {'autorizacao': autorizacao})
 
 
-def baixar_os(request, id):
+def baixar(request, id):
     relatorio = get_object_or_404(Autorizacao, id=id)
 
     return HttpResponse('TESTEEEE')
