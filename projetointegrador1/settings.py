@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     # MyApps
     'autorizacao',
     'relatorios',
-    'pagina_inicial'
+    'pagina_inicial',
+    'usuarios'
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'head'  %}
+    <link rel="stylesheet" href="{% static 'autorizacao/css/autorizacao.css' %}">
+    <link rel="stylesheet" href="{% static 'relatorios/css/listar_relatorio.css' %}">
+{% endblock  %}
+
+{% block 'dashboard'  %}
+    <br>
+    <br>
+    <div class="container">
+        <form action="{% url 'cadastro' %}" method='POST'> {% csrf_token %}
+            <p>Digite seu primeiro nome:</p>
+            <input type="text" placeholder="primeiro nome" name="nome">
+            <br>
+            <br>
+            <p>Digite seu sobrenome:</p>
+            <input type="text" placeholder="sobrenome" name="sobrenome">
+            <br>
+            <br>
+            <p>Digite seu e-mail:</p>
+            <input type="email" placeholder="e-mail" name="email">
+            <br>
+            <br>
+            <p>Digite um nome de usuário:</p>
+            <input type="text" placeholder="username" name="username">
+            <br>
+            <br>
+            <p>Digite uma senha:</p>
+            <input type="password" placeholder="senha" name="senha">
+            <br>
+            <br>
+            <br>
+            <input class="btn btn-success" type="submit" value="Cadastrar">
+        </form>
+    </div>
+{% endblock  %}

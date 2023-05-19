@@ -22,4 +22,5 @@ urlpatterns = [
     path('autorizacao/', include('autorizacao.urls')),
     path('relatorios/', include('relatorios.urls')),
     path('', include('pagina_inicial.urls')),
+    path('auth/', include('usuarios.urls')),
 ]
