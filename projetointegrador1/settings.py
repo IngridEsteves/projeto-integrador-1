@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
     # MyApps
     'autorizacao',
@@ -45,6 +49,8 @@ INSTALLED_APPS = [
     'pagina_inicial',
     'usuarios'
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,6 +93,11 @@ DATABASES = {
     }
 }
 
+AUTHENTICATIONS_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # login cadastro comum
+    'allauth.account.auth_backends.AuthenticationBackend',  # login personalizao com e-mail
+    ...
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -134,3 +145,7 @@ MEDIA_URL = "/media/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = '/auth/login/'
