@@ -32,7 +32,17 @@
             </div>
             <br>
             <br>
-            <input style="float:right" class="btn btn-success" type="submit" value="Login">
+            <div class='container'>
+                <input style="float:right" class="btn btn-success" type="submit" value="Login">
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="container">
+                <p class="text-card">Não possui usuário e senha?</p>
+                <a class="btn btn-danger" href="{% url 'cadastro' %}">Cadastre-se aqui!</a>
+            </div>
         </form>
     </div>
 {% endblock  %}
