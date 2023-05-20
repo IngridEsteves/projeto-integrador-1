@@ -4,9 +4,11 @@ from django.http import HttpResponse, FileResponse
 from .models import Relatorio
 from fpdf import FPDF
 from io import BytesIO
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required(login_url="/auth/login/")
 def novo_relatorio(request):
     if request.method == "GET":
         form = FormRelatorio()
@@ -21,17 +23,20 @@ def novo_relatorio(request):
             return render(request, 'novo_relatorio.html', {'form': form})
 
 
+@login_required(login_url="/auth/login/")
 def listar_relatorio(request):
     if request.method == "GET":
         relatorios = Relatorio.objects.all()
         return render(request, 'listar_relatorio.html', {'relatorios': relatorios})
 
 
+@login_required(login_url="/auth/login/")
 def relatorio(request, identificador):
     relatorio = get_object_or_404(Relatorio, identificador=identificador)
     return render(request, 'relatorio.html', {'relatorio': relatorio})
 
 
+@login_required(login_url="/auth/login/")
 def baixar_os(request, identificador):
     relatorio = get_object_or_404(Relatorio, identificador=identificador)
 
@@ -82,5 +87,6 @@ def baixar_os(request, identificador):
     return FileResponse(pdf_bytes, as_attachment=True, filename=f"os_{relatorio.titulo}.pdf")
 
 
+@login_required(login_url="/auth/login/")
 def relatorio_inicio(request):
     return render(request, 'relatorio_inicio.html')

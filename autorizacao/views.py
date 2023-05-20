@@ -6,9 +6,11 @@ import json
 from django.shortcuts import get_object_or_404
 from fpdf import FPDF
 from io import BytesIO
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required(login_url="/auth/login/")
 def autorizacao(request):
     if request.method == "GET":
         autorizacoes_list = Autorizacao.objects.all()
@@ -100,6 +102,7 @@ def autorizacao(request):
         return HttpResponse('tessteee-bancoo')
 
 
+@login_required(login_url="/auth/login/")
 def att_autorizacao(request):
     id_autorizacao = request.POST.get('id_autorizacao')
     autorizacao = Autorizacao.objects.filter(id=id_autorizacao)
@@ -109,6 +112,7 @@ def att_autorizacao(request):
     return JsonResponse(data)
 
 
+@login_required(login_url="/auth/login/")
 def update_autorizacao(request, id):
     body = json.loads(request.body)
 
@@ -193,17 +197,20 @@ def update_autorizacao(request, id):
         return JsonResponse({'status': '500'})
 
 
+@login_required(login_url="/auth/login/")
 def listar_autorizacao(request):
     if request.method == "GET":
         autorizacoes = Autorizacao.objects.all()
         return render(request, 'listar_autorizacao.html', {'autorizacoes': autorizacoes})
 
 
+@login_required(login_url="/auth/login/")
 def autorizacao_list(request, id):
     autorizacao = get_object_or_404(Autorizacao, id=id)
     return render(request, 'autorizacao_list.html', {'autorizacao': autorizacao})
 
 
+@login_required(login_url="/auth/login/")
 def baixar(request, id):
     autorizacao = get_object_or_404(Autorizacao, id=id)
 
