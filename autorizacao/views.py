@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse, FileResponse
+from django.http import JsonResponse, FileResponse
 from .models import Autorizacao
 from django.core import serializers
 import json
@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from fpdf import FPDF
 from io import BytesIO
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 # Create your views here.
@@ -56,7 +57,8 @@ def autorizacao(request):
         autorizacao = Autorizacao.objects.filter(numero=numero)
 
         if autorizacao.exists():
-            return HttpResponse('Autorização já existe')
+            messages.info(request, 'Autorização já existe. Atualize-a')
+            return render(request, 'listar_autorizacao.html')
 
         autorizacao = Autorizacao(
             categoria=categoria,
@@ -99,7 +101,8 @@ def autorizacao(request):
 
         autorizacao.save()
 
-        return HttpResponse('tessteee-bancoo')
+        messages.info(request, 'Autorização cadastrada com sucesso!')
+        return render(request, 'pagina_inicial.html')
 
 
 @login_required(login_url="/auth/login/")

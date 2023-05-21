@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_django
+from django.contrib.auth import logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -19,11 +21,13 @@ def cadastro(request):
         user = User.objects.filter(username=username).first()
 
         if user:
-            return HttpResponse("Este USERNAME já existe!")
+            messages.info(request, 'Este username já existe')
+            return render(request, 'cadastro.html')
 
         user = User.objects.create_user(first_name=nome, last_name=sobrenome, username=username, email=email, password=senha)  # noqa
         user.save()
-        return HttpResponse("Usuário cadastrado com sucesso!")
+        messages.info(request, 'Usuário cadastrado com sucesso')
+        return render(request, 'login.html')
 
 
 def login(request):
@@ -39,4 +43,11 @@ def login(request):
             login_django(request, user)
             return render(request, 'pagina_inicial.html')
         else:
-            return HttpResponse("Usuário ou senha inválidos")
+            messages.info(request, 'Usuário ou senha inválidos')
+            return render(request, 'login.html')
+
+
+@login_required(login_url="/auth/login/")
+def sair(request):
+    logout(request)
+    return render(request, 'pagina_inicial.html')
