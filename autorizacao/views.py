@@ -234,7 +234,8 @@ def baixar(request, id):
             # Setting font: helvetica italic 8
             self.set_font("Arial", "I", 8)
             # Printing page number:
-            self.cell(0, 10, f"Page {self.page_no()}", align="C")
+            # self.cell(0, 10, f"Page {self.page_no()}", border="T", align="C")
+            self.cell(0, 10, "Rua Luiz Pereira de Campos, n.º 901, Centro, Bertioga/SP | CEP 11250-117 | 13 3319.8034", border="T", align="C")
 
     pdf = PDF()
     pdf.add_page()
@@ -347,6 +348,12 @@ def baixar(request, id):
     pdf.cell(33, 10, f'{autorizacao.exoticos} exoticos', 1, 0, 'L', 0)
     pdf.cell(33, 10, f'{autorizacao.euterpe} euterpe edulis', 1, 1, 'L', 0)
     pdf.ln(5)
+    
+    pdf.cell(190, 10, 'CONSIDERAÇÕES:', 0, 1, 'L', 0)
+    pdf.cell(190, 10, '1. Esta AUTORIZAÇÃO está em conformidade com o disposto na Lei Complementar n.º 140/2011', 0, 1, 'L', 0)
+    pdf.cell(190, 10, '2. A Autorização Ambiental Municipal não exime da necessidade de outras autorizações', 0, 1, 'L', 0)                    
+                    
+
 
     pdf_content = pdf.output(dest='S').encode('latin1')  # Salvar o pdf em memória
     pdf_bytes = BytesIO(pdf_content)
