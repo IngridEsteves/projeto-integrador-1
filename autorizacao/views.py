@@ -348,12 +348,10 @@ def baixar(request, id):
     pdf.cell(33, 10, f'{autorizacao.exoticos} exoticos', 1, 0, 'L', 0)
     pdf.cell(33, 10, f'{autorizacao.euterpe} euterpe edulis', 1, 1, 'L', 0)
     pdf.ln(5)
-    
+
     pdf.cell(190, 10, 'CONSIDERAÇÕES:', 0, 1, 'L', 0)
     pdf.cell(190, 10, '1. Esta AUTORIZAÇÃO está em conformidade com o disposto na Lei Complementar n.º 140/2011', 0, 1, 'L', 0)
-    pdf.cell(190, 10, '2. A Autorização Ambiental Municipal não exime da necessidade de outras autorizações', 0, 1, 'L', 0)                    
-                    
-
+    pdf.cell(190, 10, '2. A Autorização Ambiental Municipal não exime da necessidade de outras autorizações', 0, 1, 'L', 0)
 
     pdf_content = pdf.output(dest='S').encode('latin1')  # Salvar o pdf em memória
     pdf_bytes = BytesIO(pdf_content)
